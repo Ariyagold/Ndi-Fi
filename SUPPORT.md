@@ -6,9 +6,11 @@ support chat or dedicated support email yet; please use the channels below.
 ## Documentation
 
 Start with the [protocol overview](README.md) and the
-[documentation index](docs/). The [developer guide](DEVELOPMENT.md) covers local
-build and test commands, and the [Stellar guide](stellar/README.md) covers the
-Soroban implementation.
+[documentation index](docs/). Contributors should start with the
+[contributor onboarding guide](docs/ONBOARDING.md). To run the full local stack
+(EVM + Stellar + web) in one go, see [docs/LOCAL_STACK.md](docs/LOCAL_STACK.md).
+The [developer guide](DEVELOPMENT.md) covers local build and test commands, and
+the [Stellar guide](stellar/README.md) covers the Soroban implementation.
 
 ## Security reports
 

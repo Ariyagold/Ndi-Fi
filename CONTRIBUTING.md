@@ -1,9 +1,11 @@
 # Contributing to Ndi-Fi
 
-Thanks for helping build Ndi-Fi. This guide covers the **Stellar (Soroban)**
-contracts in `stellar/`, which take part in the
+Thanks for helping build Ndi-Fi. This guide covers contribution rules, workflows,
+and review expectations across the repository, including our participation in the
 [Stellar Wave Program on Drips](https://www.drips.network/wave/stellar).
-The Solidity contracts in `src/` follow their own Foundry workflow.
+
+> 🐣 **New contributor?** Start with our comprehensive [**Contributor Onboarding Guide**](docs/ONBOARDING.md) for step-by-step environment setup, starter task ladders, and curated good first issues!
+> 🖥️ **Running the full stack locally?** See [**docs/LOCAL_STACK.md**](docs/LOCAL_STACK.md) for anvil, Stellar/Soroban, frontend, and web UI setup in one place.
 
 ## Ground rules
 
@@ -97,9 +99,9 @@ forge build --sizes
 forge test -vvv
 ```
 
-The root `.gitignore` ignores `docs/` (Foundry's generated docs). Files in
-`docs/stellar/` are tracked, so editing them works normally, but a **new** file
-there must be added with `git add -f docs/stellar/<file>`.
+The root `.gitignore` ignores Foundry's build outputs in `docs/` while tracking markdown
+guides in `docs/` and `docs/stellar/`. See [docs/ONBOARDING.md](docs/ONBOARDING.md) for full
+setup and first-issue guidance.
 
 Contract code rules:
 
