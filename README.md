@@ -49,6 +49,9 @@ Ndi-Fi/
 ├── script/                            # Deployment scripts (Foundry)
 │   ├── Deploy.s.sol                   # Main deployment script
 │   └── SetupProtocol.s.sol            # Protocol initialization
+├── frontend/                          # Accessible, localized DeFi help UI
+│   ├── src/                           # Tooltip/inline-help components + locales
+│   └── test/                          # Dependency-free component/content tests
 ├── test/                              # Test suites (Foundry)
 │   ├── NdiLending.t.sol             # Lending tests
 │   ├── NdiStaking.t.sol             # Staking tests
@@ -230,6 +233,14 @@ stellar contract build
 Setup, deployment and design notes: [`stellar/README.md`](stellar/README.md),
 [`docs/stellar/ARCHITECTURE.md`](docs/stellar/ARCHITECTURE.md) and
 [`docs/stellar/MIGRATION.md`](docs/stellar/MIGRATION.md).
+
+## Frontend help UI
+
+[`frontend/`](frontend/) holds a framework-agnostic tooltip and inline-help
+system for DeFi concepts (collateral factor, APR, health factor and more),
+with plain-language definitions, progressive disclosure and English/Spanish/
+French copy. Run `cd frontend && npm test` or `npm run demo` for the live
+examples. See [`frontend/README.md`](frontend/README.md) for details.
 
 This project takes part in the
 [Stellar Wave Program](https://www.drips.network/wave/stellar). See
