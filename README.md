@@ -275,3 +275,7 @@ address entries from the deployment you intend to use.
 
 Validate the configuration before building with `cd web && npm run
 validate:env`. A Next.js build also validates it through `web/next.config.js`.
+Use `web/config/contract-registry.js` to resolve a contract by connected
+chain ID (`getConnectedChainAddresses` reads `eth_chainId` from an EIP-1193
+wallet provider). Unsupported chains and unknown contract names fail with
+explicit errors rather than falling back to another deployment.
