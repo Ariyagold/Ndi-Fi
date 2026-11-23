@@ -8,6 +8,7 @@
 
 - [About Ndi-Fi](#about-ndi-fi)
 - [Folder Structure](#folder-structure)
+- [Contributor Onboarding](#-contributor-onboarding)
 - [Getting Started](#getting-started)
 - [Development Workflow](#development-workflow)
 - [Testing](#testing)
@@ -182,10 +183,11 @@ graph TD
 ## 🔄 **Development Workflow**
 
 1. **Local Development**: `contracts/`, `test/`, `scripts/`
-2. **Testing**: Unit → Integration → E2E testing
-3. **Deployment**: Testnet → Mainnet via `scripts/deploy/`
-4. **Monitoring**: Protocol metrics and security monitoring
-5. **Upgrades**: Managed through proxy contracts and governance
+2. **Docker Compose**: `docker-compose up -d --build` (runs Anvil backend & frontend help UI with `env_file: .env`)
+3. **Testing**: Unit → Integration → E2E testing
+4. **Deployment**: Testnet → Mainnet via `scripts/deploy/`
+5. **Monitoring**: Protocol metrics and security monitoring
+6. **Upgrades**: Managed through proxy contracts and governance
 
 ---
 
@@ -203,6 +205,8 @@ graph TD
 
 | Document | What it covers |
 |---|---|
+| [`docs/LOCAL_STACK.md`](docs/LOCAL_STACK.md) | Running the full local stack: anvil (EVM), Stellar/Soroban tests, frontend demo, web UI — ports, env vars, `dev-local.sh` script, and cross-stack troubleshooting |
+| [`docs/ONBOARDING.md`](docs/ONBOARDING.md) | Contributor onboarding guide: step-by-step setup, starter task progression ladder, curated good first issues, Wave template guide, mentorship SLA |
 | [`docs/ORACLE.md`](docs/ORACLE.md) | Price feed / oracle configuration: Chainlink feeds per collateral, staleness/deviation/fallback status, and how to add a new collateral feed |
 | [`docs/UPGRADEABILITY.md`](docs/UPGRADEABILITY.md) | Upgradeability and admin model across the Solidity and Stellar contracts, governance roadmap, upgrade verification, key management |
 | [`docs/VAULT_ERC4626.md`](docs/VAULT_ERC4626.md) | NdiFiVault ERC-4626 conformance, deviations, fees/rounding, slippage limits, property tests, asset recovery |
@@ -244,7 +248,9 @@ examples. See [`frontend/README.md`](frontend/README.md) for details.
 
 This project takes part in the
 [Stellar Wave Program](https://www.drips.network/wave/stellar). See
-[`CONTRIBUTING.md`](CONTRIBUTING.md) and [DEVELOPMENT.md](DEVELOPMENT.md) before picking up an issue.
+[`docs/ONBOARDING.md`](docs/ONBOARDING.md) for curated first issues,
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for workflow rules, and
+[`DEVELOPMENT.md`](DEVELOPMENT.md) before picking up an issue.
 
 > **Do not start work on an issue until a maintainer assigns it to you. Comment on the issue to express interest.**
 

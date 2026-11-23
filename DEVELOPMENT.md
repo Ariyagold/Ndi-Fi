@@ -1,7 +1,44 @@
 # Development guide
 
-This guide covers local tooling for contributors. For workflow, branches, and PR
-rules see [CONTRIBUTING.md](CONTRIBUTING.md).
+This guide covers local tooling for contributors. To run the full local stack
+(anvil + Stellar + web UIs) in one go, see [**docs/LOCAL_STACK.md**](docs/LOCAL_STACK.md).
+For the beginner onboarding path and starter issues, see [**docs/ONBOARDING.md**](docs/ONBOARDING.md).
+For workflow, branches, and PR rules, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Docker Compose & Environment Setup
+
+Ndi-Fi includes a containerized development environment via `docker-compose.yml`.
+
+### Setting up `.env`
+
+Copy `.env.example` to create your local `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Validate `.env.example` and `.env` at any time with:
+
+```bash
+node scripts/validate-env.js --check-example
+```
+
+### Running with Docker Compose
+
+Both backend and frontend services load `.env` through the `env_file: .env` directive in `docker-compose.yml`:
+
+```bash
+# Start backend (Anvil EVM node :8545) and frontend (Help UI :3000)
+docker-compose up -d --build
+
+# Inspect logs
+docker-compose logs -f
+
+# Shut down
+docker-compose down
+```
+
+All `NEXT_PUBLIC_*` variables in `.env` are forwarded to the frontend container for client-side contract interactions.
 
 ## Pre-commit (format and lint)
 
