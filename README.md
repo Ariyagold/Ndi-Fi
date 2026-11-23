@@ -263,3 +263,15 @@ The shared, framework-agnostic footer lives in
 links (docs, security, governance and support), a risk disclosure, a
 version/network indicator, and a mobile collapse. Preview it with
 `cd web && python3 -m http.server 8000`.
+
+## Frontend environment
+
+Copy `.env.example` to `web/.env.local` and set the public mainnet and Sepolia
+chain IDs, RPC URLs, and deployed contract addresses. The `NEXT_PUBLIC_*`
+prefix means values are exposed in browser bundles: use public RPC endpoints
+and never place private keys or other secrets in these variables. This
+repository does not include deployed EVM contract addresses, so populate the
+address entries from the deployment you intend to use.
+
+Validate the configuration before building with `cd web && npm run
+validate:env`. A Next.js build also validates it through `web/next.config.js`.
