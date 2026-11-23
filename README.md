@@ -284,3 +284,8 @@ Privacy-respecting event tracking is provided by
 [`web/analytics`](web/analytics/README.md). Events are disabled unless users
 opt in; the documented taxonomy and property allowlist exclude wallet and
 transaction identifiers.
+
+Use [`web/config/explorer.js`](web/config/explorer.js) for mainnet and Sepolia
+address, token, and transaction links. `createExplorerLink` centralizes safe
+new-tab attributes (`rel="noopener noreferrer"`); this repository currently
+has no transaction UI to update directly.
