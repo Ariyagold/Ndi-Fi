@@ -44,6 +44,8 @@ export const DEFAULT_FOOTER_CONTENT = Object.freeze({
       title: 'Support',
       links: Object.freeze([
         Object.freeze({ label: 'Get help', href: 'SUPPORT.md' }),
+        Object.freeze({ label: 'Onboarding guide', href: 'docs/ONBOARDING.md' }),
+        Object.freeze({ label: 'Local stack setup', href: 'docs/LOCAL_STACK.md' }),
         Object.freeze({ label: 'Developer guide', href: 'DEVELOPMENT.md' }),
         Object.freeze({ label: 'Report a vulnerability', href: 'SECURITY.md#reporting-a-vulnerability' }),
       ]),
