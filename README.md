@@ -243,3 +243,12 @@ This project takes part in the
 - **Solidity verification:** [`Verify Solidity Contracts`](.github/workflows/verify-solidity.yml) runs on tagged releases or manual dispatch (`forge verify-contract`, `ETHERSCAN_API_KEY` secret). Document verification status in release notes.
 - **Stellar testnet deploy:** [`Deploy Stellar Contracts (Testnet)`](.github/workflows/deploy-stellar-testnet.yml) is manual-dispatch only, requires approval via the `stellar-testnet` environment, uploads `deployments/testnet.json` as an artifact, and posts a deploy summary comment.
 - **Security:** see [SECURITY.md](SECURITY.md) for vulnerability reporting, secret scanning/push protection expectations, and dependency review policy.
+- **Support:** see [SUPPORT.md](SUPPORT.md) for documentation links and how to reach the maintainers.
+
+## Reusable UI
+
+The shared, framework-agnostic footer lives in
+[`web/components/footer`](web/components/footer/README.md). It provides grouped
+links (docs, security, governance and support), a risk disclosure, a
+version/network indicator, and a mobile collapse. Preview it with
+`cd web && python3 -m http.server 8000`.
