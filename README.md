@@ -279,3 +279,8 @@ Use `web/config/contract-registry.js` to resolve a contract by connected
 chain ID (`getConnectedChainAddresses` reads `eth_chainId` from an EIP-1193
 wallet provider). Unsupported chains and unknown contract names fail with
 explicit errors rather than falling back to another deployment.
+
+Privacy-respecting event tracking is provided by
+[`web/analytics`](web/analytics/README.md). Events are disabled unless users
+opt in; the documented taxonomy and property allowlist exclude wallet and
+transaction identifiers.
