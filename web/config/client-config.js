@@ -1,10 +1,3 @@
-const CONTRACT_KEYS = Object.freeze([
-  'NDI_POINT_ADDRESS',
-  'NDI_FI_VAULT_ADDRESS',
-  'NDI_FI_LENDING_ADDRESS',
-  'NDI_STAKING_ADDRESS',
-]);
-
 /**
  * @typedef {object} NetworkConfig
  * @property {number} chainId
@@ -135,5 +128,3 @@ export function readPublicEnvironment() {
     NEXT_PUBLIC_TESTNET_NDI_STAKING_ADDRESS: process.env.NEXT_PUBLIC_TESTNET_NDI_STAKING_ADDRESS,
   };
 }
-
-export { CONTRACT_KEYS };
