@@ -53,6 +53,9 @@ Ndi-Fi/
 ├── frontend/                          # Accessible, localized DeFi help UI
 │   ├── src/                           # Tooltip/inline-help components + locales
 │   └── test/                          # Dependency-free component/content tests
+├── web/                               # Framework-agnostic shared UI pieces
+│   ├── components/footer/             # Shared footer component + config
+│   └── components/data-table/         # Responsive positions/history tables
 ├── test/                              # Test suites (Foundry)
 │   ├── NdiLending.t.sol             # Lending tests
 │   ├── NdiStaking.t.sol             # Staking tests
@@ -267,5 +270,12 @@ This project takes part in the
 The shared, framework-agnostic footer lives in
 [`web/components/footer`](web/components/footer/README.md). It provides grouped
 links (docs, security, governance and support), a risk disclosure, a
-version/network indicator, and a mobile collapse. Preview it with
-`cd web && python3 -m http.server 8000`.
+version/network indicator, and a mobile collapse.
+
+Responsive positions and history tables live in
+[`web/components/data-table`](web/components/data-table/README.md). They provide
+semantic table markup on desktop, card layouts on mobile, sorting/filtering,
+pagination, and accessible empty/loading states.
+
+Preview both with `cd web && python3 -m http.server 8000`, then open
+`/` for the footer and `/data-tables.html` for the tables.
