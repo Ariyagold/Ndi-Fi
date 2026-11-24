@@ -264,8 +264,17 @@ This project takes part in the
 
 ## Reusable UI
 
-The shared, framework-agnostic footer lives in
-[`web/components/footer`](web/components/footer/README.md). It provides grouped
-links (docs, security, governance and support), a risk disclosure, a
-version/network indicator, and a mobile collapse. Preview it with
-`cd web && python3 -m http.server 8000`.
+The shared, framework-agnostic frontend pieces live in [`web/`](web/). They are
+Web Components and plain CSS/JS with no build step — run `cd web && node --test`
+(no dependencies) or preview them with `cd web && python3 -m http.server 8000`.
+
+| Piece | Path | What it is |
+| --- | --- | --- |
+| Design tokens | [`web/design-tokens`](web/design-tokens/README.md) | Single source of truth for colour, spacing, radius, shadow and typography — CSS variables + a Tailwind theme, with light/dark sets |
+| Button | [`web/components/button`](web/components/button/README.md) | `<ndi-button>` — variants, sizes, loading/disabled states, full-width and icon slots, accessible (focus ring, `aria-busy`) |
+| Notice banner | [`web/components/notice-banner`](web/components/notice-banner/README.md) | `<ndi-notice-banner>` — protocol notices from a remote/local source, severity levels, dismiss-with-persistence, stale handling |
+| Optimistic UI | [`web/components/optimistic`](web/components/optimistic/README.md) | `OptimisticStore` — apply tx deltas on submit, rollback on fail, refetch on confirm, race guard by tx nonce/key |
+| Footer | [`web/components/footer`](web/components/footer/README.md) | Grouped links, risk disclosure, version/network indicator, mobile collapse |
+
+`web/index.html` previews all of the above, including a live optimistic-update
+demo and a theme toggle.
