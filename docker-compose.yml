@@ -1,73 +1,85 @@
-# Local development stack for Ndi-Fi.
+version: '3.8'
+
+# ==============================================================================
+# Ndi-Fi Protocol - Local Development Compose
+# ==============================================================================
+# Starts backend services (EVM anvil node, contract deployment) and frontend UI.
 #
-# Inspect service health:
-#   docker compose ps                # shows State and Health columns
-#   docker compose logs <service>    # view logs for a specific service
-#   docker inspect --format='{{json .State.Health}}' <container>
+# Usage:
+#   docker-compose up -d             # Start all services in the background
+#   docker-compose logs -f           # Follow container logs
+#   docker-compose down              # Stop and remove containers
 #
-# Cold-start reliability:
-#   The depends_on condition: service_healthy ensures that dependent
-#   services wait until healthchecks pass before starting. Run
-#   `docker compose up --wait` to block until all services are healthy.
+# Environment:
+#   Both backend and frontend services consume configuration from .env via
+#   the env_file directive. Copy .env.example to .env before starting.
+# ==============================================================================
 
 services:
-  postgres:
-    image: postgres:16-alpine
+  # ----------------------------------------------------------------------------
+  # Backend: Local EVM Anvil node & contract runtime
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: ndifi-backend
+    env_file:
+      - .env
+    ports:
+      - "${ANVIL_PORT:-8545}:8545"
     environment:
-      POSTGRES_USER: ndifi
-      POSTGRES_PASSWORD: ndifi
-      POSTGRES_DB: ndifi
-    ports:
-      - "5432:5432"
+      - ANVIL_PORT=${ANVIL_PORT:-8545}
+      - ETH_RPC_URL=${ETH_RPC_URL:-http://localhost:8545}
+      - CHAIN_ID=${CHAIN_ID:-31337}
+      - PRIVATE_KEY=${PRIVATE_KEY:-0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ndifi -d ndifi"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "curl -sf -X POST -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_chainId\",\"params\":[],\"id\":1}' http://127.0.0.1:8545 || exit 1"]
       interval: 5s
       timeout: 3s
-      retries: 10
-      start_period: 5s
+      retries: 5
+      start_period: 3s
+    networks:
+      - ndifi-net
 
-  horizon:
-    image: stellar/quickstart:latest
+  # ----------------------------------------------------------------------------
+  # Frontend: Web interface & DeFi Help UI (reads NEXT_PUBLIC_* from .env)
+  # ----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        NEXT_PUBLIC_APP_ENV: ${NEXT_PUBLIC_APP_ENV:-development}
+        NEXT_PUBLIC_ETH_RPC_URL: ${NEXT_PUBLIC_ETH_RPC_URL:-http://localhost:8545}
+        NEXT_PUBLIC_DEFAULT_CHAIN_ID: ${NEXT_PUBLIC_DEFAULT_CHAIN_ID:-31337}
+        NEXT_PUBLIC_STELLAR_NETWORK: ${NEXT_PUBLIC_STELLAR_NETWORK:-testnet}
+        NEXT_PUBLIC_STELLAR_RPC_URL: ${NEXT_PUBLIC_STELLAR_RPC_URL:-https://soroban-testnet.stellar.org}
+    container_name: ndifi-frontend
+    env_file:
+      - .env
     ports:
-      - "8000:8000"
+      - "${FRONTEND_PORT:-3000}:3000"
     environment:
-      NETWORK: testnet
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8000/ > /dev/null"]
-      interval: 10s
-      timeout: 5s
-      retries: 15
-      start_period: 30s
-
-  api:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      DATABASE_URL: postgres://ndifi:ndifi@postgres:5432/ndifi
-      REDIS_URL: redis://redis:6379
-      HORIZON_URL: http://horizon:8000
+      - PORT=3000
+      - NODE_ENV=development
+      - NEXT_PUBLIC_APP_ENV=${NEXT_PUBLIC_APP_ENV:-development}
+      - NEXT_PUBLIC_ETH_RPC_URL=${NEXT_PUBLIC_ETH_RPC_URL:-http://localhost:8545}
+      - NEXT_PUBLIC_DEFAULT_CHAIN_ID=${NEXT_PUBLIC_DEFAULT_CHAIN_ID:-31337}
+      - NEXT_PUBLIC_STELLAR_NETWORK=${NEXT_PUBLIC_STELLAR_NETWORK:-testnet}
+      - NEXT_PUBLIC_STELLAR_RPC_URL=${NEXT_PUBLIC_STELLAR_RPC_URL:-https://soroban-testnet.stellar.org}
+      - NEXT_PUBLIC_NDI_VAULT_ADDRESS=${NEXT_PUBLIC_NDI_VAULT_ADDRESS:-}
+      - NEXT_PUBLIC_NDI_LENDING_ADDRESS=${NEXT_PUBLIC_NDI_LENDING_ADDRESS:-}
+      - NEXT_PUBLIC_NDI_STAKING_ADDRESS=${NEXT_PUBLIC_NDI_STAKING_ADDRESS:-}
+      - NEXT_PUBLIC_NDI_POINT_ADDRESS=${NEXT_PUBLIC_NDI_POINT_ADDRESS:-}
     depends_on:
-      postgres:
+      backend:
         condition: service_healthy
-      redis:
-        condition: service_healthy
-      horizon:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:3000/health > /dev/null"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 15s
+    restart: unless-stopped
+    networks:
+      - ndifi-net
+
+networks:
+  ndifi-net:
+    driver: bridge
