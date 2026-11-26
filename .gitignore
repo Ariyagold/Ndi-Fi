@@ -7,10 +7,13 @@ out/
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
-# Docs build output only (source docs are tracked)
-docs/build/
-docs/node_modules/
-docs/.docusaurus/
+# Docs
+docs/*
+!docs/*.md
+!docs/stellar/
+
+# Generated Solidity API reference (produced by `forge doc` in CI)
+docs/reference/solidity/
 
 # Dotenv file
 .env
