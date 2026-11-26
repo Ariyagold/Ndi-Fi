@@ -168,7 +168,16 @@ export class FakeElement {
   }
 
   dispatchEvent(event) {
-    event.target ??= this;
+    // `event.target` is a read-only getter on native Event / CustomEvent objects
+    // from Node's globalThis. Use a safe assignment that works for both native
+    // events (define a plain property) and FakeEvent objects (writable property).
+    if (event.target == null) {
+      try {
+        event.target = this;
+      } catch {
+        try { Object.defineProperty(event, 'target', { value: this, writable: true, configurable: true }); } catch { /* ignore */ }
+      }
+    }
     let node = this;
     while (node) {
       for (const handler of node._listeners.get(event.type) ?? []) {
