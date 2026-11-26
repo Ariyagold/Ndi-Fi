@@ -317,3 +317,29 @@ The shared, framework-agnostic footer lives in
 links (docs, security, governance and support), a risk disclosure, a
 version/network indicator, and a mobile collapse. Preview it with
 `cd web && python3 -m http.server 8000`.
+
+## Frontend environment
+
+Copy `.env.example` to `web/.env.local` and set the public mainnet and Sepolia
+chain IDs, RPC URLs, and deployed contract addresses. The `NEXT_PUBLIC_*`
+prefix means values are exposed in browser bundles: use public RPC endpoints
+and never place private keys or other secrets in these variables. This
+repository does not include deployed EVM contract addresses, so populate the
+address entries from the deployment you intend to use.
+
+Validate the configuration before building with `cd web && npm run
+validate:env`. A Next.js build also validates it through `web/next.config.js`.
+Use `web/config/contract-registry.js` to resolve a contract by connected
+chain ID (`getConnectedChainAddresses` reads `eth_chainId` from an EIP-1193
+wallet provider). Unsupported chains and unknown contract names fail with
+explicit errors rather than falling back to another deployment.
+
+Privacy-respecting event tracking is provided by
+[`web/analytics`](web/analytics/README.md). Events are disabled unless users
+opt in; the documented taxonomy and property allowlist exclude wallet and
+transaction identifiers.
+
+Use [`web/config/explorer.js`](web/config/explorer.js) for mainnet and Sepolia
+address, token, and transaction links. `createExplorerLink` centralizes safe
+new-tab attributes (`rel="noopener noreferrer"`); this repository currently
+has no transaction UI to update directly.
