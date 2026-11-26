@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Shared, framework-agnostic UI pieces for Ndi-Fi",
   "scripts": {
-    "test": "node --test \"**/*.test.js\""
+    "test": "node --test",
+    "validate:env": "node scripts/validate-env.js"
   }
 }
