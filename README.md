@@ -211,6 +211,12 @@ graph TD
 | [`docs/UPGRADEABILITY.md`](docs/UPGRADEABILITY.md) | Upgradeability and admin model across the Solidity and Stellar contracts, governance roadmap, upgrade verification, key management |
 | [`docs/VAULT_ERC4626.md`](docs/VAULT_ERC4626.md) | NdiFiVault ERC-4626 conformance, deviations, fees/rounding, slippage limits, property tests, asset recovery |
 | [`docs/AUDIT_READINESS.md`](docs/AUDIT_READINESS.md) | Repeatable audit-readiness checklist: tests, invariants, static analysis, known issues, auditor scope template |
+| [`docs/SOLIDITY_API.md`](docs/SOLIDITY_API.md) | Auto-generated Solidity contract API reference: local `forge doc` workflow and link to the published docs site |
+
+The browsable contract reference is built from NatSpec comments by
+[`forge doc`](https://getfoundry.sh/config/reference/doc-generator/) and published to
+GitHub Pages by the [Docs workflow](.github/workflows/docs.yml). Generated output
+lives in `docs/reference/solidity/` and is intentionally excluded from Git.
 
 ---
 

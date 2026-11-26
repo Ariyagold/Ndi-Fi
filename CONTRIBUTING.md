@@ -97,7 +97,13 @@ For Solidity changes, run the Foundry checks used in CI:
 forge fmt --check
 forge build --sizes
 forge test -vvv
+forge doc --build
 ```
+
+Document every public/external function, event and public state variable with NatSpec
+(`@notice`/`@dev`, plus `@param` and `@return`) so the generated contract reference stays
+complete. `forge doc --build` writes the browsable API reference to
+`docs/reference/solidity/`; see [docs/SOLIDITY_API.md](docs/SOLIDITY_API.md).
 
 The root `.gitignore` ignores Foundry's build outputs in `docs/` while tracking markdown
 guides in `docs/` and `docs/stellar/`. See [docs/ONBOARDING.md](docs/ONBOARDING.md) for full
