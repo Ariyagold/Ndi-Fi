@@ -8,7 +8,9 @@
 
 - [About Ndi-Fi](#about-ndi-fi)
 - [Folder Structure](#folder-structure)
+- [Contributor Onboarding](#-contributor-onboarding)
 - [Getting Started](#getting-started)
+- [Docker Compose](#docker-compose)
 - [Development Workflow](#development-workflow)
 - [Testing](#testing)
 - [Deployment](#deployment)
@@ -179,13 +181,55 @@ graph TD
 
 ---
 
-## 🔄 **Development Workflow**
+## � **Docker Compose**
+
+Run the full local stack (Foundry, Stellar Soroban, and Web) with Docker Compose:
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- Copy `.env.example` to `.env` and configure as needed
+
+### Quick Start
+
+```bash
+# Copy environment variables
+cp .env.example .env
+
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+```
+
+### Services
+
+- **Foundry** (port 8545): Ethereum local node with Anvil for Solidity contract development
+- **Stellar** (port 8000): Stellar Soroban local network for Rust contract development
+- **Web** (port 3000): Web application frontend (placeholder - configure your web app in docker-compose.yml)
+
+### Healthchecks
+
+Each service includes healthchecks to ensure they are ready before dependent services start. The web service waits for both Foundry and Stellar to be healthy.
+
+### Environment Variables
+
+All services share environment variables via `.env` file. See `.env.example` for available variables.
+
+---
+
+## �🔄 **Development Workflow**
 
 1. **Local Development**: `contracts/`, `test/`, `scripts/`
-2. **Testing**: Unit → Integration → E2E testing
-3. **Deployment**: Testnet → Mainnet via `scripts/deploy/`
-4. **Monitoring**: Protocol metrics and security monitoring
-5. **Upgrades**: Managed through proxy contracts and governance
+2. **Docker Compose**: `docker-compose up -d --build` (runs Anvil backend & frontend help UI with `env_file: .env`)
+3. **Testing**: Unit → Integration → E2E testing
+4. **Deployment**: Testnet → Mainnet via `scripts/deploy/`
+5. **Monitoring**: Protocol metrics and security monitoring
+6. **Upgrades**: Managed through proxy contracts and governance
 
 ---
 
@@ -203,10 +247,18 @@ graph TD
 
 | Document | What it covers |
 |---|---|
+| [`docs/LOCAL_STACK.md`](docs/LOCAL_STACK.md) | Running the full local stack: anvil (EVM), Stellar/Soroban tests, frontend demo, web UI — ports, env vars, `dev-local.sh` script, and cross-stack troubleshooting |
+| [`docs/ONBOARDING.md`](docs/ONBOARDING.md) | Contributor onboarding guide: step-by-step setup, starter task progression ladder, curated good first issues, Wave template guide, mentorship SLA |
 | [`docs/ORACLE.md`](docs/ORACLE.md) | Price feed / oracle configuration: Chainlink feeds per collateral, staleness/deviation/fallback status, and how to add a new collateral feed |
 | [`docs/UPGRADEABILITY.md`](docs/UPGRADEABILITY.md) | Upgradeability and admin model across the Solidity and Stellar contracts, governance roadmap, upgrade verification, key management |
 | [`docs/VAULT_ERC4626.md`](docs/VAULT_ERC4626.md) | NdiFiVault ERC-4626 conformance, deviations, fees/rounding, slippage limits, property tests, asset recovery |
 | [`docs/AUDIT_READINESS.md`](docs/AUDIT_READINESS.md) | Repeatable audit-readiness checklist: tests, invariants, static analysis, known issues, auditor scope template |
+| [`docs/SOLIDITY_API.md`](docs/SOLIDITY_API.md) | Auto-generated Solidity contract API reference: local `forge doc` workflow and link to the published docs site |
+
+The browsable contract reference is built from NatSpec comments by
+[`forge doc`](https://getfoundry.sh/config/reference/doc-generator/) and published to
+GitHub Pages by the [Docs workflow](.github/workflows/docs.yml). Generated output
+lives in `docs/reference/solidity/` and is intentionally excluded from Git.
 
 ---
 
@@ -244,7 +296,9 @@ examples. See [`frontend/README.md`](frontend/README.md) for details.
 
 This project takes part in the
 [Stellar Wave Program](https://www.drips.network/wave/stellar). See
-[`CONTRIBUTING.md`](CONTRIBUTING.md) and [DEVELOPMENT.md](DEVELOPMENT.md) before picking up an issue.
+[`docs/ONBOARDING.md`](docs/ONBOARDING.md) for curated first issues,
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for workflow rules, and
+[`DEVELOPMENT.md`](DEVELOPMENT.md) before picking up an issue.
 
 > **Do not start work on an issue until a maintainer assigns it to you. Comment on the issue to express interest.**
 

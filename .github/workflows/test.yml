@@ -20,22 +20,14 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: 1.2.3    # pin to your local version
+      - name: Build Docker image
+        run: docker build -f Dockerfile.foundry -t ndi-fi-foundry .
 
-      - name: Show Forge version
-        run: forge --version
-
-      - name: Run Forge fmt (auto-format if check fails)
-        run: forge fmt --check || (forge fmt && echo "Code auto-formatted 🚀")
-        id: fmt
+      - name: Run Forge fmt
+        run: docker run --rm ndi-fi-foundry forge fmt --check
 
       - name: Run Forge build
-        run: forge build --sizes
-        id: build
+        run: docker run --rm ndi-fi-foundry forge build --sizes
 
       - name: Run Forge tests
-        run: forge test -vvv
-        id: test
+        run: docker run --rm ndi-fi-foundry forge test -vvv
