@@ -72,7 +72,9 @@ docs(stellar): add error-code reference
 test(token): cover burn_from
 ```
 
-Scopes: `token`, `lending`, `staking`, `stellar` (workspace, CI, scripts), `docs`.
+Scopes: `token`, `lending`, `staking`, `stellar` (workspace, CI, scripts), `docs`, `frontend`, `ci`.
+
+PR titles follow the same format and are enforced by CI. See [Commit and PR title format](#commit-and-pr-title-format) below.
 
 ## Pre-commit hooks (optional, recommended)
 
