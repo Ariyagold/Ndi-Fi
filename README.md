@@ -10,6 +10,7 @@
 - [Folder Structure](#folder-structure)
 - [Contributor Onboarding](#-contributor-onboarding)
 - [Getting Started](#getting-started)
+- [Docker Compose](#docker-compose)
 - [Development Workflow](#development-workflow)
 - [Testing](#testing)
 - [Deployment](#deployment)
@@ -180,7 +181,48 @@ graph TD
 
 ---
 
-## 🔄 **Development Workflow**
+## � **Docker Compose**
+
+Run the full local stack (Foundry, Stellar Soroban, and Web) with Docker Compose:
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- Copy `.env.example` to `.env` and configure as needed
+
+### Quick Start
+
+```bash
+# Copy environment variables
+cp .env.example .env
+
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+```
+
+### Services
+
+- **Foundry** (port 8545): Ethereum local node with Anvil for Solidity contract development
+- **Stellar** (port 8000): Stellar Soroban local network for Rust contract development
+- **Web** (port 3000): Web application frontend (placeholder - configure your web app in docker-compose.yml)
+
+### Healthchecks
+
+Each service includes healthchecks to ensure they are ready before dependent services start. The web service waits for both Foundry and Stellar to be healthy.
+
+### Environment Variables
+
+All services share environment variables via `.env` file. See `.env.example` for available variables.
+
+---
+
+## �🔄 **Development Workflow**
 
 1. **Local Development**: `contracts/`, `test/`, `scripts/`
 2. **Docker Compose**: `docker-compose up -d --build` (runs Anvil backend & frontend help UI with `env_file: .env`)
@@ -211,6 +253,12 @@ graph TD
 | [`docs/UPGRADEABILITY.md`](docs/UPGRADEABILITY.md) | Upgradeability and admin model across the Solidity and Stellar contracts, governance roadmap, upgrade verification, key management |
 | [`docs/VAULT_ERC4626.md`](docs/VAULT_ERC4626.md) | NdiFiVault ERC-4626 conformance, deviations, fees/rounding, slippage limits, property tests, asset recovery |
 | [`docs/AUDIT_READINESS.md`](docs/AUDIT_READINESS.md) | Repeatable audit-readiness checklist: tests, invariants, static analysis, known issues, auditor scope template |
+| [`docs/SOLIDITY_API.md`](docs/SOLIDITY_API.md) | Auto-generated Solidity contract API reference: local `forge doc` workflow and link to the published docs site |
+
+The browsable contract reference is built from NatSpec comments by
+[`forge doc`](https://getfoundry.sh/config/reference/doc-generator/) and published to
+GitHub Pages by the [Docs workflow](.github/workflows/docs.yml). Generated output
+lives in `docs/reference/solidity/` and is intentionally excluded from Git.
 
 ---
 
@@ -237,6 +285,7 @@ stellar contract build
 Setup, deployment and design notes: [`stellar/README.md`](stellar/README.md),
 [`docs/stellar/ARCHITECTURE.md`](docs/stellar/ARCHITECTURE.md) and
 [`docs/stellar/MIGRATION.md`](docs/stellar/MIGRATION.md).
+Contract API reference (public functions, events, error codes): [`docs/stellar/API_REFERENCE.md`](docs/stellar/API_REFERENCE.md).
 
 ## Frontend help UI
 
@@ -249,7 +298,8 @@ examples. See [`frontend/README.md`](frontend/README.md) for details.
 This project takes part in the
 [Stellar Wave Program](https://www.drips.network/wave/stellar). See
 [`docs/ONBOARDING.md`](docs/ONBOARDING.md) for curated first issues,
-[`CONTRIBUTING.md`](CONTRIBUTING.md) for workflow rules, and
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for workflow rules,
+[`docs/TESTING.md`](docs/TESTING.md) for the testing strategy (unit, fuzz, invariant, integration across all layers), and
 [`DEVELOPMENT.md`](DEVELOPMENT.md) before picking up an issue.
 
 > **Do not start work on an issue until a maintainer assigns it to you. Comment on the issue to express interest.**
@@ -269,3 +319,29 @@ The shared, framework-agnostic footer lives in
 links (docs, security, governance and support), a risk disclosure, a
 version/network indicator, and a mobile collapse. Preview it with
 `cd web && python3 -m http.server 8000`.
+
+## Frontend environment
+
+Copy `.env.example` to `web/.env.local` and set the public mainnet and Sepolia
+chain IDs, RPC URLs, and deployed contract addresses. The `NEXT_PUBLIC_*`
+prefix means values are exposed in browser bundles: use public RPC endpoints
+and never place private keys or other secrets in these variables. This
+repository does not include deployed EVM contract addresses, so populate the
+address entries from the deployment you intend to use.
+
+Validate the configuration before building with `cd web && npm run
+validate:env`. A Next.js build also validates it through `web/next.config.js`.
+Use `web/config/contract-registry.js` to resolve a contract by connected
+chain ID (`getConnectedChainAddresses` reads `eth_chainId` from an EIP-1193
+wallet provider). Unsupported chains and unknown contract names fail with
+explicit errors rather than falling back to another deployment.
+
+Privacy-respecting event tracking is provided by
+[`web/analytics`](web/analytics/README.md). Events are disabled unless users
+opt in; the documented taxonomy and property allowlist exclude wallet and
+transaction identifiers.
+
+Use [`web/config/explorer.js`](web/config/explorer.js) for mainnet and Sepolia
+address, token, and transaction links. `createExplorerLink` centralizes safe
+new-tab attributes (`rel="noopener noreferrer"`); this repository currently
+has no transaction UI to update directly.
