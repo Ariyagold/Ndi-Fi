@@ -10,6 +10,7 @@
 - [Folder Structure](#folder-structure)
 - [Contributor Onboarding](#-contributor-onboarding)
 - [Getting Started](#getting-started)
+- [Docker Compose](#docker-compose)
 - [Development Workflow](#development-workflow)
 - [Testing](#testing)
 - [Deployment](#deployment)
@@ -180,7 +181,48 @@ graph TD
 
 ---
 
-## 🔄 **Development Workflow**
+## � **Docker Compose**
+
+Run the full local stack (Foundry, Stellar Soroban, and Web) with Docker Compose:
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- Copy `.env.example` to `.env` and configure as needed
+
+### Quick Start
+
+```bash
+# Copy environment variables
+cp .env.example .env
+
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+```
+
+### Services
+
+- **Foundry** (port 8545): Ethereum local node with Anvil for Solidity contract development
+- **Stellar** (port 8000): Stellar Soroban local network for Rust contract development
+- **Web** (port 3000): Web application frontend (placeholder - configure your web app in docker-compose.yml)
+
+### Healthchecks
+
+Each service includes healthchecks to ensure they are ready before dependent services start. The web service waits for both Foundry and Stellar to be healthy.
+
+### Environment Variables
+
+All services share environment variables via `.env` file. See `.env.example` for available variables.
+
+---
+
+## �🔄 **Development Workflow**
 
 1. **Local Development**: `contracts/`, `test/`, `scripts/`
 2. **Docker Compose**: `docker-compose up -d --build` (runs Anvil backend & frontend help UI with `env_file: .env`)
