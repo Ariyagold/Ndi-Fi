@@ -285,6 +285,7 @@ stellar contract build
 Setup, deployment and design notes: [`stellar/README.md`](stellar/README.md),
 [`docs/stellar/ARCHITECTURE.md`](docs/stellar/ARCHITECTURE.md) and
 [`docs/stellar/MIGRATION.md`](docs/stellar/MIGRATION.md).
+Contract API reference (public functions, events, error codes): [`docs/stellar/API_REFERENCE.md`](docs/stellar/API_REFERENCE.md).
 
 ## Frontend help UI
 
@@ -297,7 +298,8 @@ examples. See [`frontend/README.md`](frontend/README.md) for details.
 This project takes part in the
 [Stellar Wave Program](https://www.drips.network/wave/stellar). See
 [`docs/ONBOARDING.md`](docs/ONBOARDING.md) for curated first issues,
-[`CONTRIBUTING.md`](CONTRIBUTING.md) for workflow rules, and
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for workflow rules,
+[`docs/TESTING.md`](docs/TESTING.md) for the testing strategy (unit, fuzz, invariant, integration across all layers), and
 [`DEVELOPMENT.md`](DEVELOPMENT.md) before picking up an issue.
 
 > **Do not start work on an issue until a maintainer assigns it to you. Comment on the issue to express interest.**
