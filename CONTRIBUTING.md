@@ -16,6 +16,16 @@ and review expectations across the repository, including our participation in th
 
 ---
 
+## Quick start
+
+Run the bootstrap script from the repository root to install submodules, build both Foundry and Soroban contracts, and run all tests in one shot:
+
+```bash
+./bootstrap.sh
+```
+
+The script checks for missing tools ([Foundry](https://book.getfoundry.sh/getting-started/installation), [Rust/rustup](https://rustup.rs), [Node.js ≥ 18](https://nodejs.org), [Stellar CLI 28.x](https://github.com/stellar/stellar-cli/releases)) and tells you what to install before it proceeds.
+
 ## Setup
 
 ### Stellar / Soroban
@@ -113,11 +123,9 @@ docs(stellar): add error-code reference
 test(token): cover burn_from
 ```
 
-**Scopes:** `token`, `lending`, `staking`, `stellar` (workspace, CI, scripts), `docs`, `frontend`, `web`.
+Scopes: `token`, `lending`, `staking`, `stellar` (workspace, CI, scripts), `docs`, `frontend`, `ci`.
 
-One logical change per commit. Squash fixups before requesting review.
-
----
+PR titles follow the same format and are enforced by CI. See [Commit and PR title format](#commit-and-pr-title-format) below.
 
 ## Pre-commit Hooks (optional, recommended)
 
@@ -152,69 +160,17 @@ stellar contract build
 forge fmt --check
 forge build --sizes
 forge test -vvv
+forge doc --build
 ```
 
-### Frontend checks
+Document every public/external function, event and public state variable with NatSpec
+(`@notice`/`@dev`, plus `@param` and `@return`) so the generated contract reference stays
+complete. `forge doc --build` writes the browsable API reference to
+`docs/reference/solidity/`; see [docs/SOLIDITY_API.md](docs/SOLIDITY_API.md).
 
-```bash
-npm run lint
-npm run build
-```
-
----
-
-## Stellar-Specific Requirements
-
-### Build / test / clippy
-
-The Stellar CI job (`stellar.yml`) runs in order: `fmt → clippy → test → contract build`. Every step must pass. The toolchain and CLI version are pinned — do not change `stellar/rust-toolchain.toml` without a maintainer discussion.
-
-### Contract code rules
-
-- Every state-changing function that acts for a user calls `user.require_auth()`.
-- Admin functions use the `#[only_owner]` macro.
-- Errors go in the contract's `#[contracterror]` enum with an explicit numeric code. Use `panic_with_error!` to surface them. Do not `panic!` with strings.
-- Use instance storage for configuration, persistent storage for per-user data, and always extend TTLs (use the `DAY_IN_LEDGERS` constants as the guide).
-- Use `checked_*` math on `i128`. No floats, no unchecked arithmetic.
-- Emit a `#[contractevent]` for every state change that users or indexers care about.
-- Every public function has a `///` doc comment explaining its purpose, parameters, and any error conditions.
-
-### Adding a new Stellar contract
-
-1. Create a new crate under `stellar/contracts/<name>/`.
-2. Add it to `stellar/Cargo.toml` workspace members.
-3. Use workspace dependency versions (`soroban-sdk = { workspace = true }`).
-4. Add unit tests in `src/test.rs` and integration scenarios in `stellar/tests/integration.rs`.
-
----
-
-## Frontend Contribution Section
-
-Changes to `frontend/` must:
-
-- Follow the existing component structure and naming conventions.
-- Not introduce new dependencies without a maintainer discussion.
-- Pass `npm run lint` and `npm run build` with no errors.
-- Include a brief description of the UI change in the PR body (a screenshot helps for visual changes).
-- Not hardcode RPC endpoints, contract addresses, or API keys — use environment variables as defined in `.env.example`.
-
-If a PR touches smart-contract-related UI (connecting a wallet, reading on-chain state, sending transactions), link to the relevant contract function in the PR description.
-
----
-
-## Pull Requests
-
-Fill in the PR template: include `Closes #<issue>`, a summary of what changed, how you tested it, and the checklist below. A maintainer will review your PR. Please respond to review comments within the Wave cycle.
-
-## Code Review Checklist
-
-Before marking your PR ready for review, confirm the following:
-
-**All PRs**
-- [ ] `Closes #<issue>` is in the PR description.
-- [ ] The PR touches only files relevant to the issue.
-- [ ] No secrets, keys, or tokens are committed.
-- [ ] CI passes (fmt, clippy/lint, tests, build).
+The root `.gitignore` ignores Foundry's build outputs in `docs/` while tracking markdown
+guides in `docs/` and `docs/stellar/`. See [docs/ONBOARDING.md](docs/ONBOARDING.md) for full
+setup and first-issue guidance.
 
 **Stellar / Soroban**
 - [ ] `cargo fmt --all --check` passes.
@@ -233,11 +189,29 @@ Before marking your PR ready for review, confirm the following:
 - [ ] `forge test -vvv` passes.
 - [ ] New functions and storage variables have NatSpec comments.
 
-**Frontend**
-- [ ] `npm run lint` passes.
-- [ ] `npm run build` passes.
-- [ ] No hardcoded addresses or keys.
-- [ ] Screenshot or recording attached for visual changes.
+## Linting GitHub Actions workflows locally
+
+[actionlint](https://github.com/rhysd/actionlint) catches misconfigured workflows before they reach CI.
+
+Install it once:
+
+```bash
+# macOS
+brew install actionlint
+
+# Linux — download the binary
+bash <(curl -s https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+```
+
+Then run it from the repository root:
+
+```bash
+actionlint
+```
+
+CI runs the same check on every change to `.github/workflows/**`.
+
+## Pull requests
 
 **Documentation**
 - [ ] All links resolve correctly.
